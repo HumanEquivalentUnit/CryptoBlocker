@@ -76,7 +76,7 @@ Function New-CBArraySplit
 # Get all drives with shared folders, these drives will get FRSRM protection
 $DrivesContainingShares = @(Get-WmiObject Win32_Share |            # all shares on this computer, filter:
                             Where-Object { $_.Type -eq 0 } |       # 0 = disk drives (not printers, IPC$, C$ Admin shares)
-                            Selec-Object -ExpandProperty Path |    # Shared folder path, e.g. "D:\UserFolders\"
+                            Select-Object -ExpandProperty Path |    # Shared folder path, e.g. "D:\UserFolders\"
                             ForEach-Object { 
                                 ([System.IO.DirectoryInfo]$_).Root.Name  # Extract the driveletter, as a string
                             } | Sort-Object -Unique)               # remove duplicates
@@ -139,7 +139,7 @@ $webClient = New-Object System.Net.WebClient
 $jsonStr = $webClient.DownloadString("https://fsrm.experiant.ca/api/v1/get")
 $monitoredExtensions = @(ConvertFrom-Json20 $jsonStr | ForEach-Object { $_.filters })
 
-If (TestPath .\SkipList.txt)
+If (Test-Path .\SkipList.txt)
 {
     $Exclusions = Get-Content .\SkipList.txt | ForEach-Object { $_.Trim() }
     $monitoredExtensions = $monitoredExtensions | Where-Object { $Exclusions -notcontains $_ }
