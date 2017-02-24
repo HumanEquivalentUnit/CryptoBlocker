@@ -143,6 +143,7 @@ If (Test-Path .\SkipList.txt)
 {
     $Exclusions = Get-Content .\SkipList.txt | ForEach-Object { $_.Trim() }
     $monitoredExtensions = $monitoredExtensions | Where-Object { $Exclusions -notcontains $_ }
+
 }
 Else 
 {
